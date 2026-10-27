@@ -1,0 +1,17 @@
+{
+  "id": "evento-vip",
+  "name": "Evento VIP",
+  "mcVersion": "1.21.1",
+  "loader": { "kind": "fabric", "version": "0.16.9" },
+  "manifest": {
+    "version": "1.0.0",
+    "files": [
+      {
+        "path": "mods/mi-mod-privado.jar",
+        "url": "https://tu-cdn.example.com/evento-vip/mi-mod-privado.jar",
+        "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "size": 123456
+      }
+    ]
+  }
+}

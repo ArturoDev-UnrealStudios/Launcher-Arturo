@@ -1,0 +1,131 @@
+/*
+ * Sistema de diseño — tokens centralizados.
+ * Grafito cálido con un único acento configurable (--accent). El cian (--accent-2) solo
+ * aparece en el relleno de progreso: es la "energía" del launcher cuando trabaja.
+ */
+@font-face {
+  font-family: 'Bricolage';
+  src: url('../assets/fonts/BricolageGrotesque-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Bricolage';
+  src: url('../assets/fonts/BricolageGrotesque-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Instrument';
+  src: url('../assets/fonts/InstrumentSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Instrument';
+  src: url('../assets/fonts/InstrumentSans-Bold.ttf') format('truetype');
+  font-weight: 600 700;
+  font-display: swap;
+}
+
+:root {
+  /* Color — tema oscuro (predeterminado) */
+  --bg: #141418;
+  --bg-sunken: #101013;
+  --panel: #1b1b21;
+  --raised: #23232b;
+  --raised-2: #2b2b35;
+  --line: #2f2f39;
+  --line-strong: #3d3d4a;
+  --text: #ededf3;
+  --text-2: #b9b9c8;
+  --muted: #8e8ea3;
+  --accent: #8b5cf6;
+  --accent-ink: #ffffff;
+  --accent-soft: color-mix(in oklab, var(--accent) 16%, transparent);
+  --accent-line: color-mix(in oklab, var(--accent) 45%, transparent);
+  --accent-2: #22d3ee;
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --danger-soft: color-mix(in oklab, var(--danger) 14%, transparent);
+  --focus: color-mix(in oklab, var(--accent) 75%, white);
+  --scrim: rgba(6, 6, 10, 0.66);
+
+  /* Tipografía */
+  --font-display: 'Bricolage', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Instrument', 'Segoe UI', system-ui, sans-serif;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 15px;
+  --fs-lg: 18px;
+  --fs-xl: 24px;
+  --fs-2xl: 32px;
+  --fs-3xl: 46px;
+  --lh-tight: 1.15;
+  --lh-body: 1.5;
+
+  /* Espaciado (escala de 4) */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s10: 40px;
+  --s12: 48px;
+
+  /* Radios por jerarquía: control < panel < escena */
+  --r-control: 7px;
+  --r-panel: 12px;
+  --r-scene: 18px;
+  --r-pill: 999px;
+
+  /* Profundidad */
+  --shadow-pop: 0 18px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--line);
+  --shadow-float: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
+
+  /* Movimiento */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --t-fast: 120ms;
+  --t-base: 200ms;
+  --t-slow: 340ms;
+
+  --sidebar-w: 232px;
+  --titlebar-h: 40px;
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  --bg: #f2f2f5;
+  --bg-sunken: #e8e8ee;
+  --panel: #ffffff;
+  --raised: #f6f6f9;
+  --raised-2: #ececf2;
+  --line: #e1e1e8;
+  --line-strong: #cdcdd8;
+  --text: #17171c;
+  --text-2: #3e3e4b;
+  --muted: #6b6b7d;
+  --accent-soft: color-mix(in oklab, var(--accent) 12%, transparent);
+  --focus: color-mix(in oklab, var(--accent) 80%, black);
+  --scrim: rgba(20, 20, 30, 0.35);
+  --shadow-pop: 0 18px 50px -14px rgba(20, 20, 40, 0.25), 0 0 0 1px var(--line);
+  --shadow-float: 0 8px 24px -10px rgba(20, 20, 40, 0.2);
+  color-scheme: light;
+}
+
+:root[data-motion='reduced'] {
+  --t-fast: 0ms;
+  --t-base: 0ms;
+  --t-slow: 0ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) {
+    --t-fast: 0ms;
+    --t-base: 0ms;
+    --t-slow: 0ms;
+  }
+}

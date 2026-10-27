@@ -1,0 +1,10 @@
+node_modules/
+dist/
+release/
+test-results/
+server/dist/
+server/data/
+*.log
+.env
+*.pem
+*.key

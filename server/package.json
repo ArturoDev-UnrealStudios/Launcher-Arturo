@@ -1,0 +1,27 @@
+{
+  "name": "unreal-launcher-authority",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Autoridad mínima y auditable para claves de instancias privadas y funciones sociales de Unreal Launcher.",
+  "license": "UNLICENSED",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/src/index.js",
+    "admin": "node dist/cli/admin.js",
+    "test": "node --import tsx --test test/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "ws": "8.18.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.30",
+    "@types/ws": "8.18.1",
+    "tsx": "4.20.3",
+    "typescript": "5.8.3"
+  }
+}

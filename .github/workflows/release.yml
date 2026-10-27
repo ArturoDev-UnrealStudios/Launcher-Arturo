@@ -1,0 +1,97 @@
+name: Release
+
+# Cada commit en main publica una actualización: versión MAJOR.MINOR (de package.json)
+# + número de ejecución como parche (p. ej. 1.0.7). El launcher la detecta en GitHub Releases,
+# verifica la firma Ed25519 del manifiesto y el SHA-256 del instalador, y la instala.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  version:
+    runs-on: ubuntu-24.04
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: v
+        run: |
+          BASE=$(node -p "require('./package.json').version.split('.').slice(0,2).join('.')")
+          echo "version=${BASE}.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm install --no-audit --no-fund --prefix server
+      - run: npm test
+      - run: npm run test:server
+
+  build-windows:
+    needs: [version, test]
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fijar versión
+        shell: bash
+        run: npm pkg set version=${{ needs.version.outputs.version }}
+      - run: npm install --no-audit --no-fund
+      - name: Instalador NSIS
+        run: npm run dist:win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: release/*.exe
+          if-no-files-found: error
+
+  publish:
+    needs: [version, build-windows]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          path: release
+          merge-multiple: true
+      - name: Notas de la versión (mensaje del commit)
+        run: git log -1 --format='%s%n%n%b' > notes.md
+      - name: Firmar manifiesto (Ed25519)
+        env:
+          UPDATE_SIGNING_KEY: ${{ secrets.UPDATE_SIGNING_KEY }}
+        run: |
+          node scripts/sign-update-manifest.mjs --dir release --version "${{ needs.version.outputs.version }}" --notes notes.md
+          cd release && sha256sum * > SHA256SUMS.txt
+      - name: Publicar en Launcher-Arturo-releases
+        env:
+          # Token personal (fine-grained) con permiso Contents: Read and write SOLO sobre Launcher-Arturo-releases.
+          GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          RELEASES_REPO: ArturoDev-UnrealStudios/Launcher-Arturo-releases
+        run: |
+          V="v${{ needs.version.outputs.version }}"
+          echo "Código: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" >> notes.md
+          gh release create "$V" release/* --repo "$RELEASES_REPO" --title "$V" --notes-file notes.md --target main

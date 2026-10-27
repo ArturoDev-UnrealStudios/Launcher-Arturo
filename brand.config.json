@@ -1,0 +1,34 @@
+{
+  "$comment": "Configuración centralizada de marca y servicios. Ningún valor de este archivo es secreto: el clientId de Microsoft es público (cliente nativo con PKCE) y las claves de actualización son claves PÚBLICAS.",
+  "productName": "Unreal Launcher",
+  "shortName": "UNREAL",
+  "appId": "dev.unreallauncher.app",
+  "tagline": "Tu Minecraft, sin fricción.",
+  "colors": {
+    "accent": "#8B5CF6",
+    "accentAlt": "#22D3EE"
+  },
+  "logo": "logo.svg",
+  "github": {
+    "owner": "ArturoDev-UnrealStudios",
+    "repo": "Launcher-Arturo-releases",
+    "updateManifestAsset": "update-manifest.json",
+    "updateSignatureAsset": "update-manifest.json.sig"
+  },
+  "updatePublicKeys": [
+    "MCowBQYDK2VwAyEAKp9ZaICd41BMGsKV6MM5MRKGlxSkZrfF5sSu3dOofK0="
+  ],
+  "authority": {
+    "url": "",
+    "publicKeys": [],
+    "$comment": "publicKeys: claves PÚBLICAS Ed25519 (base64 SPKI) de la autoridad, para verificar concesiones firmadas."
+  },
+  "microsoft": {
+    "clientId": "",
+    "redirectPath": "/auth/callback"
+  },
+  "support": {
+    "website": "",
+    "issues": ""
+  }
+}
