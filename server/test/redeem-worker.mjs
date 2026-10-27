@@ -1,8 +1,12 @@
 // Proceso/hilo independiente con su propia conexión SQLite: reproduce canjes realmente concurrentes.
 import crypto from 'node:crypto';
 import { parentPort, workerData } from 'node:worker_threads';
-import { openDb } from '../src/db.ts';
-import { KeyService } from '../src/keys.ts';
+import { register } from 'tsx/esm/api';
+
+// Registro explícito de tsx dentro del hilo (los execArgv no siempre se heredan).
+register();
+const { openDb } = await import('../src/db.ts');
+const { KeyService } = await import('../src/keys.ts');
 
 const { privateKey } = crypto.generateKeyPairSync('ed25519');
 const db = openDb(workerData.dbPath);
