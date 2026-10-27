@@ -122,7 +122,7 @@ test('canjes simultáneos desde varios procesos: solo uno gana', async () => {
     const results = await Promise.all(
       Array.from({ length: workers }, (_, i) =>
         new Promise<string>((resolve, reject) => {
-          const w = new Worker(path.join(__dirname, 'redeem-worker.mjs'), {
+          const w = new Worker(path.resolve(process.cwd(), 'test', 'redeem-worker.mjs'), {
             workerData: { dbPath: env.cfg.dbPath, pepper: env.cfg.keyPepper.toString('base64'), key, principal: `dev:worker${i}` },
             execArgv: ['--import', 'tsx'],
           });
